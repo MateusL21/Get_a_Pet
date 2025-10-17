@@ -1,0 +1,239 @@
+.home_container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.hero_section {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hero_section h1 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.hero_section p {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.pets_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.pet_card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  border-left: 3px solid #4a90e2;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+}
+
+.pet_card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.pet_image_container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.8rem;
+}
+
+.pet_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.8rem;
+  gap: 0.5rem;
+}
+
+.pet_name_section {
+  flex: 1;
+}
+
+.pet_name_section h3 {
+  color: #333;
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.pet_label {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.pet_weight,
+.pet_age {
+  color: #333;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.pet_details {
+  margin-bottom: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.detail_item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pet_status {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.status_available {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status_adopted {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.details_link {
+  display: inline-block;
+  background-color: #4a90e2;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin-top: auto;
+  transition: all 0.2s ease;
+  text-align: center;
+  width: 100%;
+}
+
+.details_link:hover {
+  background-color: #357abd;
+  transform: translateY(-1px);
+}
+
+.status_adopted {
+  text-align: center;
+  color: #721c24;
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin-top: auto;
+  padding: 0.6rem;
+  background-color: #f8d7da;
+  border-radius: 6px;
+}
+
+.no_pets {
+  text-align: center;
+  padding: 2rem 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 2px dashed #ddd;
+  margin-top: 1rem;
+  grid-column: 1 / -1;
+}
+
+.no_pets p {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .pets_grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .home_container {
+    max-width: 100%;
+    margin: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .hero_section {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero_section h1 {
+    font-size: 1.3rem;
+  }
+
+  .pets_grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.8rem;
+  }
+
+  .pet_card {
+    padding: 0.8rem;
+  }
+
+  .pet_header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .pet_status {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .home_container {
+    padding: 0.5rem;
+    margin: 0.25rem;
+  }
+
+  .hero_section {
+    padding: 0.8rem;
+  }
+
+  .hero_section h1 {
+    font-size: 1.2rem;
+  }
+
+  .hero_section p {
+    font-size: 0.8rem;
+  }
+
+  .pets_grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.6rem;
+  }
+
+  .pet_card {
+    padding: 0.6rem;
+  }
+}

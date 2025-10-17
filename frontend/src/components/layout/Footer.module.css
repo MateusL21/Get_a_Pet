@@ -1,0 +1,65 @@
+.footer {
+  background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+  color: white;
+  text-align: center;
+  padding: 2rem 1rem;
+  margin-top: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ff9a56, #ffeaa7, #ff6b6b);
+}
+
+.footer p {
+  margin: 0;
+  font-size: 1.1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.footer span {
+  font-weight: 700;
+  background: linear-gradient(45deg, #ffeaa7, #ff9a56);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Pet paw prints decoration */
+.footer::after {
+  content: "🐾";
+  position: absolute;
+  font-size: 1.5rem;
+  opacity: 0.1;
+  animation: float 3s ease-in-out infinite;
+}
+
+.footer::after:nth-child(1) {
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.footer::after:nth-child(2) {
+  top: 60%;
+  right: 15%;
+  animation-delay: 1s;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}

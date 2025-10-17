@@ -1,0 +1,257 @@
+.pet_details_container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.pet_header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 15px;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.pet_header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.pet_header p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.pet_content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-top: 2rem;
+}
+
+.pet_images {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.main_image {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.thumbnail_grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+.thumbnail {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.thumbnail:hover {
+  transform: scale(1.05);
+  border-color: #4a90e2;
+}
+
+.thumbnail.active {
+  border-color: #4a90e2;
+  transform: scale(1.05);
+}
+
+.pet_info {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #4a90e2;
+}
+
+.pet_info_section {
+  margin-bottom: 2rem;
+}
+
+.pet_info_section h2 {
+  color: #333;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.info_grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.info_item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info_label {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 600;
+}
+
+.info_value {
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: bold;
+}
+
+.color_display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.color_circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+}
+
+.adoption_section {
+  text-align: center;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  margin-top: 2rem;
+}
+
+.adopt_btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.adopt_btn:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.adopt_btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.register_prompt {
+  text-align: center;
+  padding: 1.5rem;
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  color: #856404;
+}
+
+.register_prompt a {
+  color: #4a90e2;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.register_prompt a:hover {
+  text-decoration: underline;
+}
+
+.pet_status {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.status_available {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status_adopted {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .pet_details_container {
+    max-width: 100%;
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .pet_content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .pet_header h1 {
+    font-size: 2rem;
+  }
+
+  .pet_header p {
+    font-size: 1rem;
+  }
+
+  .info_grid {
+    grid-template-columns: 1fr;
+  }
+
+  .thumbnail_grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .pet_details_container {
+    padding: 1rem;
+    margin: 0.5rem;
+  }
+
+  .pet_header {
+    padding: 1.5rem;
+  }
+
+  .pet_header h1 {
+    font-size: 1.5rem;
+  }
+
+  .pet_info {
+    padding: 1.5rem;
+  }
+
+  .main_image {
+    height: 300px;
+  }
+
+  .thumbnail_grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

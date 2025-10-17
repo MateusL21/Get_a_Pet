@@ -1,0 +1,48 @@
+.addpet_header {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.addpet_header h1 {
+  color: #333;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.addpet_header p {
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.addpet_header p:last-of-type {
+  color: #888;
+  font-style: italic;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #f0f0f0;
+}
+
+@media (max-width: 768px) {
+  .addpet_header {
+    max-width: 100%;
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .addpet_header h1 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .addpet_header {
+    padding: 1rem;
+    margin: 0.5rem;
+  }
+}

@@ -1,0 +1,294 @@
+.form_container {
+  max-width: 400px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Preview Section */
+.preview_section {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  border: 2px dashed #ddd;
+}
+
+.preview_section h3 {
+  color: #333;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.preview_pet_images {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 1rem;
+  justify-items: center;
+}
+
+.image_item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.image_container {
+  position: relative;
+  display: inline-block;
+}
+
+.preview_pet_images img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #4a90e2;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.preview_pet_images img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.remove_button {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.remove_button:hover {
+  background-color: #c0392b;
+  transform: scale(1.1);
+}
+
+.image_name {
+  font-size: 0.7rem;
+  color: #666;
+  text-align: center;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.more_images_text {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0.5rem 0 0 0;
+  font-style: italic;
+}
+
+.file_input_container {
+  margin-bottom: 0.5rem;
+}
+
+.file_input_help {
+  font-size: 0.75rem;
+  color: #666;
+  margin: 0.25rem 0 0 0;
+  text-align: center;
+}
+
+/* Input Styles */
+.form_container input[type="text"],
+.form_container input[type="email"],
+.form_container input[type="password"],
+.form_container input[type="tel"],
+.form_container input[type="file"],
+.form_container select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 13px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  background-color: #fff;
+}
+
+.form_container input[type="text"]:focus,
+.form_container input[type="email"]:focus,
+.form_container input[type="password"]:focus,
+.form_container input[type="tel"]:focus,
+.form_container select:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+/* File Input Specific */
+.form_container input[type="file"] {
+  padding: 8px;
+  background-color: #f8f9fa;
+  border: 2px dashed #ccc;
+  cursor: pointer;
+}
+
+.form_container input[type="file"]:hover {
+  border-color: #4a90e2;
+  background-color: #f0f7ff;
+}
+
+/* Submit Button */
+.form_container input[type="submit"] {
+  width: 100%;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form_container input[type="submit"]:hover {
+  background-color: #357abd;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.form_container input[type="submit"]:active {
+  transform: translateY(0);
+}
+
+/* Form Labels */
+.form_container label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+  font-size: 13px;
+}
+
+/* Form Heading */
+.form_container h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-size: 20px;
+}
+
+/* Error state for inputs */
+.form_container input.error,
+.form_container select.error {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+}
+
+/* Success state for inputs */
+.form_container input.success {
+  border-color: #27ae60;
+  box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.2);
+}
+
+/* Error messages */
+.error_message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  border: 1px solid #f5c6cb;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.field_error {
+  color: #e74c3c;
+  font-size: 0.75rem;
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+  display: block;
+  font-weight: 500;
+}
+
+/* Placeholder styling */
+.form_container input::placeholder {
+  color: #999;
+  font-size: 12px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .form_container {
+    max-width: 100%;
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .preview_pet_images {
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: 0.8rem;
+  }
+
+  .preview_pet_images img {
+    width: 65px;
+    height: 65px;
+  }
+
+  .remove_button {
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
+    top: -6px;
+    right: -6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .form_container {
+    padding: 1rem;
+    margin: 0.5rem;
+  }
+
+  .form_container input[type="text"],
+  .form_container input[type="email"],
+  .form_container input[type="password"],
+  .form_container input[type="tel"],
+  .form_container input[type="file"],
+  .form_container select {
+    padding: 10px;
+  }
+
+  .preview_section {
+    padding: 1rem;
+  }
+
+  .preview_pet_images {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .preview_pet_images img {
+    width: 60px;
+    height: 60px;
+  }
+}
