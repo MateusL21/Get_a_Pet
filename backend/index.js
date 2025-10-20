@@ -9,7 +9,16 @@ const app = express();
 app.use(express.json());
 
 // Solve CORS
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://adopt-a-pet-by-mleonel21.vercel.app",
+      "https://adopt-a-pet-by-mleonel21-backend.vercel.app",
+    ],
+    credentials: true,
+  })
+);
 
 // Public folder for images
 app.use(express.static("public"));
