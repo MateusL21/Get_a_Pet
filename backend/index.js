@@ -1,10 +1,22 @@
 const express = require("express");
 const cors = require("cors");
-const User = require("./models/User");
 const conn = require("./db/conn");
 
 const app = express();
 
+// Middleware para verificar conexão com DB
+app.use((req, res, next) => {
+  if (conn.connection.readyState !== 1) {
+    console.log("🔄 Database connection lost, reconnecting...");
+    require("./db/conn").catch(() => {
+      return res.status(503).json({
+        error: "Database temporarily unavailable",
+        message: "Trying to reconnect to database...",
+      });
+    });
+  }
+  next();
+});
 // config JSON response
 app.use(express.json());
 
