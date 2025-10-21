@@ -19,6 +19,13 @@ app.use(
     credentials: true,
   })
 );
+// Rota raiz para teste
+app.get("/", (req, res) => {
+  res.json({
+    message: "Backend API is running!",
+    timestamp: new Date().toISOString(),
+  });
+});
 
 // Public folder for images
 app.use(express.static("public"));
