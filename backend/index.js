@@ -27,6 +27,14 @@ app.use(express.static("public"));
 const UserRoutes = require("./routes/UserRoutes");
 const PetRoutes = require("./routes/PetRoutes");
 
+app.get("/favicon.ico", (req, res) => {
+  res.status(204).end(); // No Content
+});
+
+app.get("/favicon.png", (req, res) => {
+  res.status(204).end(); // No Content
+});
+
 app.use("/users", UserRoutes);
 app.use("/pets", PetRoutes);
 
