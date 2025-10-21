@@ -19,28 +19,18 @@ app.use(
     credentials: true,
   })
 );
-// Rota raiz para teste
-app.get("/", (req, res) => {
-  res.json({
-    message: "Backend API is running!",
-    timestamp: new Date().toISOString(),
-  });
-});
 
 // Public folder for images
 app.use(express.static("public"));
 
+// Rota raiz para health check
+app.get("/", (req, res) => {
+  res.json({ message: "Backend API is running!" });
+});
+
 // Routes
 const UserRoutes = require("./routes/UserRoutes");
 const PetRoutes = require("./routes/PetRoutes");
-
-app.get("/favicon.ico", (req, res) => {
-  res.status(204).end(); // No Content
-});
-
-app.get("/favicon.png", (req, res) => {
-  res.status(204).end(); // No Content
-});
 
 app.use("/users", UserRoutes);
 app.use("/pets", PetRoutes);
