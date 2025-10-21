@@ -4,19 +4,6 @@ const conn = require("./db/conn");
 
 const app = express();
 
-// Middleware para verificar conexão com DB
-app.use((req, res, next) => {
-  if (conn.connection.readyState !== 1) {
-    console.log("🔄 Database connection lost, reconnecting...");
-    require("./db/conn").catch(() => {
-      return res.status(503).json({
-        error: "Database temporarily unavailable",
-        message: "Trying to reconnect to database...",
-      });
-    });
-  }
-  next();
-});
 // config JSON response
 app.use(express.json());
 
@@ -37,10 +24,22 @@ app.use(express.static("public"));
 
 // Rota raiz para health check
 app.get("/", (req, res) => {
+  const dbStatus =
+    conn.connection.readyState === 1 ? "connected" : "disconnected";
   res.json({
     message: "Backend API is running!",
-    environment: process.env.NODE_ENV || "production",
+    database: dbStatus,
     timestamp: new Date().toISOString(),
+  });
+});
+
+// Rota de teste do banco
+app.get("/test-db", (req, res) => {
+  const status = conn.connection.readyState;
+  const states = ["Disconnected", "Connected", "Connecting", "Disconnecting"];
+  res.json({
+    dbStatus: states[status],
+    message: status === 1 ? "✅ DB Connected" : "❌ DB Not connected",
   });
 });
 
@@ -50,6 +49,17 @@ const PetRoutes = require("./routes/PetRoutes");
 
 app.use("/users", UserRoutes);
 app.use("/pets", PetRoutes);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error("Error:", err.message);
+  res.status(500).json({ error: "Internal server error" });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ error: "Route not found" });
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
