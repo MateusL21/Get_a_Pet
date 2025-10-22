@@ -5,13 +5,14 @@ const multer = require("multer");
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
-  console.error("❌ Supabase credentials missing");
-}
+console.log("🔧 Supabase Config:", {
+  url: supabaseUrl ? "PRESENT" : "MISSING",
+  key: supabaseKey ? "PRESENT" : "MISSING",
+});
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Configuração do Multer (armazena na memória)
+// Configuração do Multer
 const storage = multer.memoryStorage();
 const imageUpload = multer({
   storage: storage,
@@ -23,7 +24,7 @@ const imageUpload = multer({
     }
   },
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB
+    fileSize: 5 * 1024 * 1024,
   },
 });
 
@@ -35,7 +36,11 @@ const uploadToSupabase = async (file, folder = "pets") => {
       .toString(36)
       .substring(2, 15)}.${fileExtension}`;
 
-    console.log("📤 Uploading file to Supabase:", fileName);
+    console.log("📤 Uploading file:", {
+      fileName: fileName,
+      size: file.buffer.length,
+      mimetype: file.mimetype,
+    });
 
     const { data, error } = await supabase.storage
       .from("images")
@@ -46,17 +51,20 @@ const uploadToSupabase = async (file, folder = "pets") => {
       });
 
     if (error) {
-      console.error("❌ Supabase upload error:", error);
+      console.error("❌ Supabase upload error:", {
+        message: error.message,
+        details: error,
+      });
       throw error;
     }
 
     // Obtém URL pública
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from("images").getPublicUrl(fileName);
+    const { data: urlData } = supabase.storage
+      .from("images")
+      .getPublicUrl(fileName);
 
-    console.log("✅ Upload successful:", publicUrl);
-    return publicUrl;
+    console.log("✅ Upload successful:", urlData.publicUrl);
+    return urlData.publicUrl;
   } catch (error) {
     console.error("❌ Error in uploadToSupabase:", error);
     throw error;
