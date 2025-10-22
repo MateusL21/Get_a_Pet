@@ -2,13 +2,21 @@ const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const multer = require("multer");
 
-// Configure Cloudinary com suas credenciais
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || "djcdrg97c",
-  api_key: process.env.CLOUDINARY_API_KEY || "319267286475627",
-  api_secret:
-    process.env.CLOUDINARY_API_SECRET || "VlT2x6KnuZMkpZsXW-CIZrPh-G0",
-});
+// Configure Cloudinary usando CLOUDINARY_URL
+if (process.env.CLOUDINARY_URL) {
+  // Usa a URL completa se disponível
+  cloudinary.config({
+    cloudinary_url: process.env.CLOUDINARY_URL,
+  });
+} else {
+  // Fallback para variáveis individuais (desenvolvimento)
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME || "djcdrg97c",
+    api_key: process.env.CLOUDINARY_API_KEY || "319267286475627",
+    api_secret:
+      process.env.CLOUDINARY_API_SECRET || "VlT2x6KnuZMkpZsXW-CIZrPh-G0",
+  });
+}
 
 // Configuração do storage no Cloudinary
 const storage = new CloudinaryStorage({
@@ -44,5 +52,8 @@ const imageUpload = multer({
     fileSize: 5 * 1024 * 1024, // 5MB
   },
 });
+
+// Log para debug (remova em produção)
+console.log("Cloudinary configurado para:", cloudinary.config().cloud_name);
 
 module.exports = { imageUpload };
