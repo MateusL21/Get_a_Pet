@@ -1,44 +1,18 @@
-const cloudinary = require("cloudinary").v2;
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const { createClient } = require("@supabase/supabase-js");
 const multer = require("multer");
 
-// Configure Cloudinary usando CLOUDINARY_URL
-if (process.env.CLOUDINARY_URL) {
-  // Usa a URL completa se disponível
-  cloudinary.config({
-    cloudinary_url: process.env.CLOUDINARY_URL,
-  });
-} else {
-  // Fallback para variáveis individuais (desenvolvimento)
-  cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME || "djcdrg97c",
-    api_key: process.env.CLOUDINARY_API_KEY || "319267286475627",
-    api_secret:
-      process.env.CLOUDINARY_API_SECRET || "VlT2x6KnuZMkpZsXW-CIZrPh-G0",
-  });
+// Configuração do Supabase
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error("❌ Supabase credentials missing");
 }
 
-// Configuração do storage no Cloudinary
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: "getapet",
-    format: async (req, file) => {
-      // Determina o formato baseado no mimetype
-      const format = file.mimetype.split("/")[1];
-      return ["jpg", "jpeg", "png", "webp"].includes(format) ? format : "jpg";
-    },
-    public_id: (req, file) => {
-      return `pet_${Date.now()}_${Math.round(Math.random() * 1e9)}`;
-    },
-    transformation: [
-      { width: 800, height: 600, crop: "limit" },
-      { quality: "auto" },
-      { format: "auto" },
-    ],
-  },
-});
+const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Configuração do Multer (armazena na memória)
+const storage = multer.memoryStorage();
 const imageUpload = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
@@ -53,7 +27,40 @@ const imageUpload = multer({
   },
 });
 
-// Log para debug (remova em produção)
-console.log("Cloudinary configurado para:", cloudinary.config().cloud_name);
+// Função para upload no Supabase Storage
+const uploadToSupabase = async (file, folder = "pets") => {
+  try {
+    const fileExtension = file.originalname.split(".").pop();
+    const fileName = `${folder}/${Date.now()}-${Math.random()
+      .toString(36)
+      .substring(2, 15)}.${fileExtension}`;
 
-module.exports = { imageUpload };
+    console.log("📤 Uploading file to Supabase:", fileName);
+
+    const { data, error } = await supabase.storage
+      .from("images")
+      .upload(fileName, file.buffer, {
+        contentType: file.mimetype,
+        cacheControl: "3600",
+        upsert: false,
+      });
+
+    if (error) {
+      console.error("❌ Supabase upload error:", error);
+      throw error;
+    }
+
+    // Obtém URL pública
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("images").getPublicUrl(fileName);
+
+    console.log("✅ Upload successful:", publicUrl);
+    return publicUrl;
+  } catch (error) {
+    console.error("❌ Error in uploadToSupabase:", error);
+    throw error;
+  }
+};
+
+module.exports = { imageUpload, uploadToSupabase };

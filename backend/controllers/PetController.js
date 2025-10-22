@@ -1,17 +1,14 @@
 const Pet = require("../models/Pet");
+const { uploadToSupabase } = require("../helpers/image-upload");
 
 // helpers
-
 const getToken = require("../helpers/get-token");
 const getUserByToken = require("../helpers/get-user-by-token");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 module.exports = class PetController {
-  // create a pet
   static async create(req, res) {
     const { name, age, weight, color } = req.body;
-
-    const images = req.files;
 
     const available = true;
 
@@ -19,27 +16,20 @@ module.exports = class PetController {
 
     // validations
     if (!name) {
-      res.status(422).json({ message: "O nome é obrigatório!" });
-      return;
-    }
-    if (!age) {
-      res.status(422).json({ message: "A idade é obrigatório!" });
-      return;
-    }
-    if (!weight) {
-      res.status(422).json({ message: "O peso é obrigatório!" });
-      return;
-    }
-    if (!color) {
-      res.status(422).json({ message: "A cor é obrigatório!" });
-      return;
-    }
-    if (images.length === 0) {
-      res.status(422).json({ message: "A imagem é obrigatória!" });
-      return;
+      return res.status(422).json({ message: "O nome é obrigatório!" });
     }
 
-    res.json({ message: "Deu certo!" });
+    if (!age) {
+      return res.status(422).json({ message: "A idade é obrigatória!" });
+    }
+
+    if (!weight) {
+      return res.status(422).json({ message: "O peso é obrigatório!" });
+    }
+
+    if (!color) {
+      return res.status(422).json({ message: "A cor é obrigatória!" });
+    }
 
     // get pet owner
     const token = getToken(req);
@@ -61,18 +51,27 @@ module.exports = class PetController {
       },
     });
 
-    images.map((image) => {
-      pet.images.push(image.filename);
-    });
-
     try {
+      // Upload de imagens para Supabase
+      if (req.files && req.files.length > 0) {
+        for (let i = 0; i < req.files.length; i++) {
+          try {
+            const imageUrl = await uploadToSupabase(req.files[i], "pets");
+            pet.images.push(imageUrl);
+          } catch (uploadError) {
+            console.error("Erro no upload da imagem:", uploadError);
+            // Continua sem essa imagem específica
+          }
+        }
+      }
+
       const newPet = await pet.save();
       res.status(201).json({
         message: "Pet cadastrado com sucesso!",
         newPet,
       });
     } catch (error) {
-      res.status(500).json({ message: error });
+      res.status(500).json({ message: error.message });
     }
   }
 
@@ -111,17 +110,16 @@ module.exports = class PetController {
   static async getPetById(req, res) {
     const id = req.params.id;
 
+    // check if id is valid
     if (!ObjectId.isValid(id)) {
-      res.status(422).json({ message: "ID inválido" });
-      return;
+      return res.status(422).json({ message: "ID inválido!" });
     }
 
     // check if pet exists
     const pet = await Pet.findOne({ _id: id });
 
     if (!pet) {
-      res.status(404).json({ message: "Pet não encontrado!" });
-      return;
+      return res.status(404).json({ message: "Pet não encontrado!" });
     }
 
     res.status(200).json({
@@ -134,15 +132,14 @@ module.exports = class PetController {
 
     // check if id is valid
     if (!ObjectId.isValid(id)) {
-      res.status(422).json({ message: "ID inválido" });
-      return;
+      return res.status(422).json({ message: "ID inválido!" });
     }
 
+    // check if pet exists
     const pet = await Pet.findOne({ _id: id });
 
     if (!pet) {
-      res.status(404).json({ message: "Pet não encontrado!" });
-      return;
+      return res.status(404).json({ message: "Pet não encontrado!" });
     }
 
     // check if logged in user registered the pet
@@ -150,16 +147,15 @@ module.exports = class PetController {
     const user = await getUserByToken(token);
 
     if (pet.user._id.toString() !== user._id.toString()) {
-      res
-        .status(422)
-        .json({ message: "Houve um problema em processar a sua solicitação" });
-      return;
+      return res.status(422).json({
+        message:
+          "Houve um problema em processar a sua solicitação, tente novamente mais tarde!",
+      });
     }
 
-    await Pet.findByIdAndDelete(id);
+    await Pet.findByIdAndRemove(id);
 
     res.status(200).json({ message: "Pet removido com sucesso!" });
-    return;
   }
 
   static async updatePet(req, res) {
@@ -167,55 +163,74 @@ module.exports = class PetController {
 
     const { name, age, weight, color, available } = req.body;
 
-    const images = req.files;
-
     const updatedData = {};
 
     // check if pet exists
     const pet = await Pet.findOne({ _id: id });
 
     if (!pet) {
-      res
-        .status(404)
-        .json({ message: "Houve um problema em processar a solicitação!" });
-      return;
+      return res.status(404).json({ message: "Pet não encontrado!" });
+    }
+
+    // check if logged in user registered the pet
+    const token = getToken(req);
+    const user = await getUserByToken(token);
+
+    if (pet.user._id.toString() !== user._id.toString()) {
+      return res.status(422).json({
+        message:
+          "Houve um problema em processar a sua solicitação, tente novamente mais tarde!",
+      });
     }
 
     // validations
     if (!name) {
-      res.status(422).json({ message: "O nome é obrigatório!" });
-      return;
+      return res.status(422).json({ message: "O nome é obrigatório!" });
     } else {
       updatedData.name = name;
     }
+
     if (!age) {
-      res.status(422).json({ message: "A idade é obrigatório!" });
-      return;
+      return res.status(422).json({ message: "A idade é obrigatória!" });
     } else {
       updatedData.age = age;
     }
+
     if (!weight) {
-      res.status(422).json({ message: "O peso é obrigatório!" });
-      return;
+      return res.status(422).json({ message: "O peso é obrigatório!" });
     } else {
       updatedData.weight = weight;
     }
+
     if (!color) {
-      res.status(422).json({ message: "A cor é obrigatório!" });
-      return;
+      return res.status(422).json({ message: "A cor é obrigatória!" });
     } else {
       updatedData.color = color;
     }
-    if (images.length > 0) {
-      updatedData.images = [];
-      images.map((image) => {
-        updatedData.images.push(image.filename);
-      });
+
+    if (!available) {
+      return res.status(422).json({ message: "O status é obrigatório!" });
+    } else {
+      updatedData.available = available;
+    }
+
+    // Upload de novas imagens para Supabase
+    if (req.files && req.files.length > 0) {
+      updatedData.images = [...pet.images]; // Mantém imagens existentes
+
+      for (let i = 0; i < req.files.length; i++) {
+        try {
+          const imageUrl = await uploadToSupabase(req.files[i], "pets");
+          updatedData.images.push(imageUrl);
+        } catch (uploadError) {
+          console.error("Erro no upload da imagem:", uploadError);
+        }
+      }
     }
 
     await Pet.findByIdAndUpdate(id, updatedData);
 
-    res.status(200).json({ message: "Pet atualizado com sucesso" });
+    res.status(200).json({ message: "Pet atualizado com sucesso!" });
   }
 
   static async schedule(req, res) {
@@ -225,8 +240,7 @@ module.exports = class PetController {
     const pet = await Pet.findOne({ _id: id });
 
     if (!pet) {
-      res.status(404).json({ message: "Pet não encontrado!" });
-      return;
+      return res.status(404).json({ message: "Pet não encontrado!" });
     }
 
     // check if user registered the pet
@@ -234,20 +248,17 @@ module.exports = class PetController {
     const user = await getUserByToken(token);
 
     if (pet.user._id.equals(user._id)) {
-      res
-        .status(422)
-        .json({ message: "Você não pode agendar uma visita com o seu pet" });
-      return;
+      return res.status(422).json({
+        message: "Você não pode agendar uma visita com seu próprio Pet!",
+      });
     }
 
-    // check if user already scheduled a visit
-
+    // check if user has already adopted this pet
     if (pet.adopter) {
       if (pet.adopter._id.equals(user._id)) {
-        res
-          .status(422)
-          .json({ message: "Você já agendou uma visita para esse pet" });
-        return;
+        return res.status(422).json({
+          message: "Você já agendou uma visita para este Pet!",
+        });
       }
     }
 
@@ -261,7 +272,7 @@ module.exports = class PetController {
     await Pet.findByIdAndUpdate(id, pet);
 
     res.status(200).json({
-      message: `A visita foi agendada com sucesso, entre em contato com ${pet.user.name}`,
+      message: `A visita foi agendada com sucesso, entre em contato com ${pet.user.name} pelo telefone ${pet.user.phone}`,
     });
   }
 
@@ -272,8 +283,7 @@ module.exports = class PetController {
     const pet = await Pet.findOne({ _id: id });
 
     if (!pet) {
-      res.status(404).json({ message: "Pet não encontrado!" });
-      return;
+      return res.status(404).json({ message: "Pet não encontrado!" });
     }
 
     // check if logged in user registered the pet
@@ -281,10 +291,10 @@ module.exports = class PetController {
     const user = await getUserByToken(token);
 
     if (pet.user._id.toString() !== user._id.toString()) {
-      res
-        .status(422)
-        .json({ message: "Houve um problema em processar a sua solicitação" });
-      return;
+      return res.status(422).json({
+        message:
+          "Houve um problema em processar a sua solicitação, tente novamente mais tarde!",
+      });
     }
 
     pet.available = false;
@@ -292,7 +302,7 @@ module.exports = class PetController {
     await Pet.findByIdAndUpdate(id, pet);
 
     res.status(200).json({
-      message: "Parabéns! o ciclo de adoção foi finalizado com sucesso",
+      message: "Parabéns! O ciclo de adoção foi finalizado com sucesso!",
     });
   }
 };
